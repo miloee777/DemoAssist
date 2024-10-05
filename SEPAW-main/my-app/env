@@ -1,4 +1,5 @@
 POSTGRES_PRISMA_URL=postgresql://admin_sepaw:sepaw@Qwerty1234!@localhost:5432/sepawv2
 POSTGRES_URL_NON_POOLING=postgresql://admin_sepaw:sepaw@Qwerty1234!@localhost:5432/sepawv2
+SECRET_KEY=AIzaSyAMonny
 
 TOKEN_TEST=Ueb8137a153bbb3d8c23e5ab908420f56
