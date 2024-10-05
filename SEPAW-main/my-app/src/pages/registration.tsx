@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import withCommonData from '@/lib/withCommonData';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import withCommonData from '@/lib/withCommonData';
 
-import styles from '@/styles/page.module.css'
+import styles from '@/styles/page.module.css';
 
 import Form from 'react-bootstrap/Form';
 
-import InputLabel from '@/components/Form/InputLabel'
-import ModalAlert from '@/components/Modals/ModalAlert'
 import ButtonState from '@/components/Button/ButtonState';
+import InputLabel from '@/components/Form/InputLabel';
+import ModalAlert from '@/components/Modals/ModalAlert';
 
 import axios from 'axios';
 import md5 from 'md5';
@@ -119,7 +119,7 @@ const Registration = () => {
         }
 
     };
-    if (dataUser.isLogin) return <div>loading...</div>;
+    
 
     return (
         <Container>
