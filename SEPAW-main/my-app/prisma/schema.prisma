@@ -5,9 +5,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "mysql"
+  url       = env("SQL_PRISMA_URL") // uses connection pooling
+  directUrl = env("SQL_URL_NON_POOLING") // uses a direct connection
 }
 
 model status {
@@ -33,7 +33,7 @@ model users {
   users_line_id      String  @db.VarChar(33) // ไอดีไลน์
   users_fname        String  @db.VarChar(100) // ชื่อ
   users_sname        String  @db.VarChar(100) // นามสกุล
-  users_status_onweb Int     @default(0) @db.SmallInt // สถานะการใช้งานบนเว็บ
+  users_status_onweb Int     @default(0) // สถานะการใช้งานบนเว็บ
   users_number       String? @db.VarChar(10) // เลขที่บ้าน
   users_moo          String? @db.VarChar(5) // หมู่
   users_road         String? @db.VarChar(200) // ถนน
@@ -44,14 +44,14 @@ model users {
   users_tel1         String? @db.VarChar(12) // เบอร์โทรศัพท์ 1
 
   users_passwd        String @db.VarChar(100) // รหัสผ่าน
-  users_pin           Int    @db.SmallInt // รหัส PIN
+  users_pin           Int    // รหัส PIN
   users_status_id     status @relation(fields: [status_id], references: [status_id])
-  status_id            Int                              // สถานะผู้ใช้งาน
-  users_alert_battery  Int?   @default(0) @db.SmallInt  // สถานะการแจ้งเตือนระดับแบตเตอรี่
-  users_status_active  Int    @default(1) @db.SmallInt  // 0 = inactive, 1 = active
+  status_id           Int                              // สถานะผู้ใช้งาน
+  users_alert_battery Int?   @default(0)               // สถานะการแจ้งเตือนระดับแบตเตอรี่
+  users_status_active Int    @default(1)               // 0 = inactive, 1 = active
   users_related_borrow String? @db.VarChar(255)         // id line group
-  users_token          String? @db.Text                 // โทเคน
-  users_user           String? @db.VarChar(100)         // ชื่อผู้ใช้งาน
+  users_token         String? @db.Text                 // โทเคน
+  users_user          String? @db.VarChar(100)         // ชื่อผู้ใช้งาน
 
   takecareperson takecareperson[]
   safezone       safezone[]
@@ -82,7 +82,7 @@ model takecareperson {
   takecare_tel1     String?     @db.VarChar(12) // เบอร์โทรศัพท์ 1
   takecare_disease  String?     @db.VarChar(300) // โรคประจำตัว
   takecare_drug     String?     @db.VarChar(300) // ยาที่ใช้ประจำ
-  takecare_status   Int         @default(1) @db.SmallInt // สถานะการใช้งาน
+  takecare_status   Int         @default(1) // สถานะการใช้งาน
 
   safezone safezone[]
   location location[]
@@ -96,8 +96,8 @@ model safezone {
   safezone_id     Int            @id @default(autoincrement()) // ไอดีโซนเซฟโซน
   safez_latitude  String         @default("0") @db.VarChar(255) // ละติจูด
   safez_longitude String         @default("0") @db.VarChar(255) // ลองติจูด
-  safez_radiuslv1 Int            @default(0) @db.SmallInt // รัศมีระดับ 1
-  safez_radiuslv2 Int            @default(0) @db.SmallInt // รัศมีระดับ 2
+  safez_radiuslv1 Int            @default(0) // รัศมีระดับ 1
+  safez_radiuslv2 Int            @default(0) // รัศมีระดับ 2
 }
 
 model location {
@@ -109,11 +109,11 @@ model location {
   locat_timestamp   DateTime       @db.Date // เวลาที่บันทึก
   locat_latitude    String         @default("0") @db.VarChar(255) // ละติจูด
   locat_longitude   String         @default("0") @db.VarChar(255) // ลองติจูด
-  locat_status      Int            @default(1) @db.SmallInt // สถานะการใช้งาน 0 = ปกติ, 1 = ออกนอกเขต1, 2 = ออกนอกเขต2
-  locat_distance    Int            @default(0) @db.SmallInt // ระยะห่าง
-  locat_battery     Int            @default(0) @db.SmallInt // แบตเตอรี่
-  locat_noti_time   DateTime?      @db.Timestamptz // เวลาที่แจ้งเตือน
-  locat_noti_status Int?            @db.SmallInt // สถานะการแจ้งเตือน 1 = เขต1, 2 = เขต1 80%, 3 = เขต2
+  locat_status      Int            @default(1) // สถานะการใช้งาน 0 = ปกติ, 1 = ออกนอกเขต1, 2 = ออกนอกเขต2
+  locat_distance    Int            @default(0) // ระยะห่าง
+  locat_battery     Int            @default(0) // แบตเตอรี่
+  locat_noti_time   DateTime?      // เวลาที่แจ้งเตือน
+  locat_noti_status Int?           // สถานะการแจ้งเตือน 1 = เขต1, 2 = เขต1 80%, 3 = เขต2
 }
 
 model dlocation {
@@ -131,52 +131,52 @@ model dlocation {
 
 model extendedhelp {
   exten_id               Int     @id @default(autoincrement())  // ไอดีการขยายความช่วยเหลือ
-  exten_date             DateTime @db.Timestamptz               // วันที่
+  exten_date             DateTime @db.Date                      // วันที่
   user_id                Int?                                    // ไอดีผู้ใช้งาน
   takecare_id            Int?                                    // ไอดีผู้สูงอายุ
   exten_latitude         String?  @db.VarChar(255)               // ละติจูด
   exten_longitude        String?  @db.VarChar(255)               // ลองติจูด
-  exten_received_date    DateTime? @db.Timestamptz              // วันที่รับเรื่อง
-  exten_received_user_id Int?                                   // ไอดีผู้รับเรื่อง
-  exted_closed_date      DateTime? @db.Timestamptz              // วันที่ปิดเรื่อง
-  exten_closed_user_id   Int?                                   // ไอดีผู้ปิดเรื่อง
+  exten_received_date    DateTime?                               // วันที่รับเรื่อง
+  exten_received_user_id Int?                                    // ไอดีผู้รับเรื่อง
+  exted_closed_date      DateTime?                               // วันที่ปิดเรื่อง
+  exten_closed_user_id   Int?                                    // ไอดีผู้ปิดเรื่อง
 }
 
 model groupLine {
   group_id      Int     @id @default(autoincrement())  // ไอดีกลุ่มไลน์
   group_name    String?  @db.VarChar(100)              // ชื่อกลุ่ม
   group_line_id String  @db.VarChar(100)               // ไอดีไลน์
-  group_status  Int     @default(1) @db.SmallInt       // สถานะการใช้งาน 0 = ปิด, 1 = เปิด
+  group_status  Int     @default(1)                    // สถานะการใช้งาน 0 = ปิด, 1 = เปิด
 }
 
 model borrowequipment {
   borrow_id               Int     @id @default(autoincrement())  // ไอดีการยืม
-  borrow_date             DateTime @db.Timestamptz               // วันที่ยืม
-  borrow_return           DateTime? @db.Timestamptz              // วันที่คืน
-  borrow_status           Int     @default(1) @db.SmallInt       // สถานะการยืม  1 = ยังไม่คืน, 2 = คืนสำเร็จ, 3 = คืนไม่สำเร็จ,
+  borrow_date             DateTime @db.Date                      // วันที่ยืม
+  borrow_return           DateTime?                              // วันที่คืน
+  borrow_status           Int     @default(1)                    // สถานะการยืม  1 = ยังไม่คืน, 2 = คืนสำเร็จ, 3 = คืนไม่สำเร็จ
   borrow_user_id          Int                                    // ไอดีผู้ใช้งาน
   borrow_address          String  @db.Text                       // ที่อยู่
   borrow_tel              String  @db.VarChar(12)                // เบอร์โทรศัพท์
   borrow_objective        String  @db.Text                       // วัตถุประสงค์
   borrow_name             String  @db.VarChar(255)               // ชื่อผู้ยืม
-  borrow_equipment_status Int @default(1) @db.SmallInt           // สถานะ 1 = รอ, 2 = อนุมัติ, 3 = ไม่อนุมัติ
-  borrow_create_date      DateTime @db.Timestamptz               // วันที่สร้าง
-  borrow_update_date      DateTime @db.Timestamptz               // วันที่แก้ไข
+  borrow_equipment_status Int @default(1)                        // สถานะ 1 = รอ, 2 = อนุมัติ, 3 = ไม่อนุมัติ
+  borrow_create_date      DateTime @db.Date                      // วันที่สร้าง
+  borrow_update_date      DateTime @db.Date                      // วันที่แก้ไข
   borrow_update_user_id   Int                                    // ไอดีผู้แก้ไข
-  borrow_delete_date      DateTime? @db.Timestamptz              // วันที่ลบ
-  status                  Int @default(1) @db.SmallInt           // สถานะการยืม
+  borrow_delete_date      DateTime?                              // วันที่ลบ
+  status                  Int @default(1)                        // สถานะการยืม
   borrow_approver         Int?                                   // ผู้อนุมัติ
-  borrow_approver_date    DateTime? @db.Timestamptz              // วันที่อนุมัติ
+  borrow_approver_date    DateTime?                              // วันที่อนุมัติ
   borrow_return_user_id   Int?                                   // ไอดีผู้คืน
-  borrow_return_date      DateTime? @db.Timestamptz              // วันที่คืน
-  borrow_send_date        DateTime? @db.Timestamptz              // วันที่ส่ง
-  borrow_send_return      DateTime? @db.Timestamptz              // วันที่ส่งคืน
-  borrow_send_status      Int @default(1) @db.SmallInt           // สถานะการส่ง 1 = รอ, 2 = ส่งสำเร็จ, 3 = ส่งไม่สำเร็จ
+  borrow_return_date      DateTime?                              // วันที่คืน
+  borrow_send_date        DateTime?                              // วันที่ส่ง
+  borrow_send_return      DateTime?                              // วันที่ส่งคืน
+  borrow_send_status      Int @default(1)                        // สถานะการส่ง 1 = รอ, 2 = ส่งสำเร็จ, 3 = ส่งไม่สำเร็จ
 
   borrowequipment_list borrowequipment_list[]
   users_id_ref      users       @relation(fields: [borrow_user_id], references: [users_id])
   borrow_approver_ref users?      @relation("borrow_approver", fields: [borrow_approver], references: [users_id])
-  borrow_return_user_ref users?      @relation("borrow_return_user_id",fields: [borrow_return_user_id], references: [users_id])
+  borrow_return_user_ref users?   @relation("borrow_return_user_id", fields: [borrow_return_user_id], references: [users_id])
 }
 
 model borrowequipment_list {
@@ -185,6 +185,6 @@ model borrowequipment_list {
   borrow_equipment_id     Int     @id @default(autoincrement())  // ไอดีอุปกรณ์
   borrow_equipment        String  @db.VarChar(255)               // ชื่ออุปกรณ์
   borrow_equipment_number String  @db.VarChar(255)               // เลขอุปกรณ์
-  borrow_equipment_status Int @default(1) @db.SmallInt           // สถานะ 0 = รอ, 1 = อนุมัติ, 2 = ไม่อนุมัติ
-  borrow_equipment_delete DateTime? @db.Timestamptz              // วันที่ลบ
+  borrow_equipment_status Int @default(1)                        // สถานะ 0 = รอ, 1 = อนุมัติ, 2 = ไม่อนุมัติ
+  borrow_equipment_delete DateTime?                              // วันที่ลบ
 }
