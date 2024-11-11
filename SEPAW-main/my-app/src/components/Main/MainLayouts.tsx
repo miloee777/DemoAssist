@@ -13,8 +13,8 @@ interface LayoutProps {
 const MainLayouts: React.FC<LayoutProps> = ({ children, title, description, slug, titleBar }) => {
 
 
-  const defaultTitle = 'SEPAW 2';
-  const defaultDescription = 'SEPAW 2';
+  const defaultTitle = 'DemoAssist';
+  const defaultDescription = 'DemoAssist';
 
 
 
