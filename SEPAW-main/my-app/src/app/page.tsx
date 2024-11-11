@@ -2,7 +2,7 @@
 export default function Home() {
   return (
     <main className={''}>
-     Home Milo
+     Home Milo 2
     </main>
   )
 }
