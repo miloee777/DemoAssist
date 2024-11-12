@@ -1,9 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next'; 
 import jwt from 'jsonwebtoken';
 import prisma from '@/lib/prisma';
 import { compare } from 'bcrypt';
 
 const SECRET_KEY = process.env.SECRET_KEY;
+
+if (!SECRET_KEY) {
+    throw new Error('SECRET_KEY environment variable is not set');
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
@@ -37,7 +41,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             // สร้าง token
             const accessToken = jwt.sign(
                 { userName: user.users_user, userId: user.users_id, permission: user.status_id },
-                SECRET_KEY!,
+                SECRET_KEY,
                 { expiresIn: '1h' }
             );
 
@@ -51,10 +55,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 accessToken
             });
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Internal Server Error' });
+            console.error("Error occurred:", error);
+            return res.status(500).json({ message: 'Internal Server Error', error: (error as Error).message });
         }
+    } else {
+        res.setHeader('Allow', ['POST']);
+        return res.status(405).json({ message: 'Method not allowed' });
     }
-
-    return res.status(405).json({ message: 'Method not allowed' });
 };
