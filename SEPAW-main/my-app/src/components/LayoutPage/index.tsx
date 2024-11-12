@@ -21,12 +21,12 @@ const LayoutPage: React.FC<LayoutProps> = ({
     children
 }) => {
     const routes:Route[] = [
-        // {
-        //     path: "/dashboard",
-        //     name: "หน้าหลัก",
-        //     icon: "fas fa-align-right",
-        //     permission: [1, 2, 3]
-        // },
+         {
+             path: "/admin/dashboard",
+             name: "หน้าหลัก",
+             icon: "fas fa-align-right",
+             permission: [1, 2, 3]
+         },
         {
             path: "/admin/change_password",
             name: 'เปลี่ยนรหัสผ่านสำหรับ รหัสผู้ใช้งาน "admin"',

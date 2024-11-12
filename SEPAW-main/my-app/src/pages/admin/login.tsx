@@ -35,6 +35,10 @@ const Login = () => {
             }
             const username = form['username'].value;
             const password = form['password'].value;
+
+            console.log("Username:", username);
+            console.log("Password:", password);
+            
             await login(username, password);
             //  logout();
             

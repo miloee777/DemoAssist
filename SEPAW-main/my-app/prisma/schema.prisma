@@ -30,7 +30,7 @@ model marrystatus {
 
 model users {
   users_id           Int     @id @default(autoincrement()) // ไอดีผู้ใช้งาน
-  users_line_id      String  @db.VarChar(33) // ไอดีไลน์
+  users_line_id      String? @db.VarChar(33) // ไอดีไลน์ สามารถเป็น null ได้
   users_fname        String  @db.VarChar(100) // ชื่อ
   users_sname        String  @db.VarChar(100) // นามสกุล
   users_status_onweb Int     @default(0) // สถานะการใช้งานบนเว็บ

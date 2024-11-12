@@ -9,6 +9,7 @@ export const getUsers = async (name: string) => {
         const response = await axios.get(`/api/admin/getUsers?name=${name}`, headers(accessToken as string));
         return response.data;
     } catch (error) {
+        console.error("Error creating admin:", error); // เพิ่มบรรทัดนี้
         throw error
     }
 }
