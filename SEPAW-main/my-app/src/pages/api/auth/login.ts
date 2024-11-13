@@ -55,8 +55,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 accessToken
             });
         } catch (error) {
-            console.error("Error occurred:", error);
-            return res.status(500).json({ message: 'Internal Server Error', error: (error as Error).message });
+            console.error("Error during login:", error);
+            return res.status(500).json({ message: 'เกิดข้อผิดพลาด', error: (error as Error).message });
         }
     } else {
         res.setHeader('Allow', ['POST']);
