@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const user = await prisma.users.findFirst({
                 where: {
                     users_user: username,
-                    status_id: 1,  // ตรวจสอบว่าตรงกับค่า `status_id` ที่คุณต้องการใช้
+                    status_id: 3,  // ตรวจสอบว่าตรงกับค่า `status_id` ที่คุณต้องการใช้
                     users_status_onweb: 1,
                     users_status_active: 1
                 }

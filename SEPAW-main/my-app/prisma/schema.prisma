@@ -1,18 +1,17 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol"]
-  // output          = "./migrations"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_NON_POOLING")
+  url       = env("DATABASE_PUBLIC_URL")
+  directUrl = env("DATABASE_PUBLIC_URL_NON_POOLING")
 }
 
 model status {
-  status_id   Int     @id @default(autoincrement()) // ไอดีสถานะ
-  status_name String  @db.VarChar(200) // ชื่อสถานะ
+  status_id   Int     @id @default(autoincrement())
+  status_name String  @db.VarChar(200)
   users       users[]
 }
 
@@ -29,95 +28,92 @@ model marrystatus {
 }
 
 model users {
-  users_id           Int     @id @default(autoincrement()) // ไอดีผู้ใช้งาน
-  users_line_id      String? @db.VarChar(33) // ไอดีไลน์ สามารถเป็น null ได้
-  users_fname        String  @db.VarChar(100) // ชื่อ
-  users_sname        String  @db.VarChar(100) // นามสกุล
-  users_status_onweb Int     @default(0) // สถานะการใช้งานบนเว็บ
-  users_number       String? @db.VarChar(10) // เลขที่บ้าน
-  users_moo          String? @db.VarChar(5) // หมู่
-  users_road         String? @db.VarChar(200) // ถนน
-  users_tubon        String? @db.VarChar(100) // ตำบล
-  users_amphur       String? @db.VarChar(100) // อำเภอ
-  users_province     String? @db.VarChar(100) // จังหวัด
-  users_postcode     String? @db.VarChar(5) // รหัสไปรษณีย์
-  users_tel1         String? @db.VarChar(12) // เบอร์โทรศัพท์ 1
-
-  users_passwd        String @db.VarChar(100) // รหัสผ่าน
-  users_pin           Int    // รหัส PIN
-  users_status_id     status @relation(fields: [status_id], references: [status_id])
-  status_id           Int                              // สถานะผู้ใช้งาน
-  users_alert_battery Int?   @default(0)               // สถานะการแจ้งเตือนระดับแบตเตอรี่
-  users_status_active Int    @default(1)               // 0 = inactive, 1 = active
-  users_related_borrow String? @db.VarChar(255)         // id line group
-  users_token         String? @db.Text                 // โทเคน
-  users_user          String? @db.VarChar(100)         // ชื่อผู้ใช้งาน
-
-  takecareperson takecareperson[]
-  safezone       safezone[]
-  location       location[]
-  borrowequipment borrowequipment[]
-  approved_borrows borrowequipment[] @relation("borrow_approver")
-  return_borrows   borrowequipment[] @relation("borrow_return_user_id")
+  users_id             Int               @id @default(autoincrement())
+  users_line_id        String?           @db.VarChar(33)
+  users_fname          String            @db.VarChar(100)
+  users_sname          String            @db.VarChar(100)
+  users_status_onweb   Int               @default(0)
+  users_number         String?           @db.VarChar(10)
+  users_moo            String?           @db.VarChar(5)
+  users_road           String?           @db.VarChar(200)
+  users_tubon          String?           @db.VarChar(100)
+  users_amphur         String?           @db.VarChar(100)
+  users_province       String?           @db.VarChar(100)
+  users_postcode       String?           @db.VarChar(5)
+  users_tel1           String?           @db.VarChar(12)
+  users_passwd         String            @db.VarChar(100)
+  users_pin            Int
+  status_id            Int
+  users_alert_battery  Int?              @default(0)
+  users_status_active  Int               @default(1)
+  users_related_borrow String?           @db.VarChar(255)
+  users_token          String?
+  users_user           String?           @db.VarChar(100)
+  approved_borrows     borrowequipment[] @relation("borrow_approver")
+  return_borrows       borrowequipment[] @relation("borrow_return_user_id")
+  borrowequipment      borrowequipment[]
+  location             location[]
+  safezone             safezone[]
+  takecareperson       takecareperson[]
+  users_status_id      status            @relation(fields: [status_id], references: [status_id])
 }
 
 model takecareperson {
-  users_id_ref      users       @relation(fields: [users_id], references: [users_id])
-  users_id          Int // ไอดีผู้ใช้งาน
-  takecare_id       Int         @id @default(autoincrement()) // ไอดีผู้สูงอายุ
-  takecare_fname    String      @db.VarChar(100) // ชื่อ
-  takecare_sname    String      @db.VarChar(100) // นามสกุล
-  takecare_birthday DateTime    @db.Date // วันเกิด
+  users_id          Int
+  takecare_id       Int         @id @default(autoincrement())
+  takecare_fname    String      @db.VarChar(100)
+  takecare_sname    String      @db.VarChar(100)
+  takecare_birthday DateTime    @db.Date
+  gender_id         Int
+  marry_id          Int
+  takecare_number   String?     @db.VarChar(10)
+  takecare_moo      String?     @db.VarChar(5)
+  takecare_road     String?     @db.VarChar(200)
+  takecare_tubon    String?     @db.VarChar(100)
+  takecare_amphur   String?     @db.VarChar(100)
+  takecare_province String?     @db.VarChar(100)
+  takecare_postcode String?     @db.VarChar(5)
+  takecare_tel1     String?     @db.VarChar(12)
+  takecare_disease  String?     @db.VarChar(300)
+  takecare_drug     String?     @db.VarChar(300)
+  takecare_status   Int         @default(1)
+  location          location[]
+  safezone          safezone[]
   gender_id_ref     gender      @relation(fields: [gender_id], references: [gender_id])
-  gender_id         Int // ไอดีเพศ
   marry_id_ref      marrystatus @relation(fields: [marry_id], references: [marry_id])
-  marry_id          Int // ไอดีสถานะการสมรส
-  takecare_number   String?     @db.VarChar(10) // เลขที่บ้าน
-  takecare_moo      String?     @db.VarChar(5) // หมู่
-  takecare_road     String?     @db.VarChar(200) // ถนน
-  takecare_tubon    String?     @db.VarChar(100) // ตำบล
-  takecare_amphur   String?     @db.VarChar(100) // อำเภอ
-  takecare_province String?     @db.VarChar(100) // จังหวัด
-  takecare_postcode String?     @db.VarChar(5) // รหัสไปรษณีย์
-  takecare_tel1     String?     @db.VarChar(12) // เบอร์โทรศัพท์ 1
-  takecare_disease  String?     @db.VarChar(300) // โรคประจำตัว
-  takecare_drug     String?     @db.VarChar(300) // ยาที่ใช้ประจำ
-  takecare_status   Int         @default(1) // สถานะการใช้งาน
-
-  safezone safezone[]
-  location location[]
+  users_id_ref      users       @relation(fields: [users_id], references: [users_id])
 }
 
 model safezone {
+  takecare_id     Int
+  users_id        Int
+  safezone_id     Int            @id @default(autoincrement())
+  safez_latitude  String         @default("0") @db.VarChar(255)
+  safez_longitude String         @default("0") @db.VarChar(255)
+  safez_radiuslv1 Int            @default(0)
+  safez_radiuslv2 Int            @default(0)
   takecare_id_ref takecareperson @relation(fields: [takecare_id], references: [takecare_id])
-  takecare_id     Int // ไอดีผู้สูงอายุ
   users_id_ref    users          @relation(fields: [users_id], references: [users_id])
-  users_id        Int // ไอดีผู้ใช้งาน
-  safezone_id     Int            @id @default(autoincrement()) // ไอดีโซนเซฟโซน
-  safez_latitude  String         @default("0") @db.VarChar(255) // ละติจูด
-  safez_longitude String         @default("0") @db.VarChar(255) // ลองติจูด
-  safez_radiuslv1 Int            @default(0) // รัศมีระดับ 1
-  safez_radiuslv2 Int            @default(0) // รัศมีระดับ 2
 }
 
 model location {
-  users_id_ref      users          @relation(fields: [users_id], references: [users_id])
-  users_id          Int // ไอดีผู้ใช้งาน
+  users_id          Int
+  takecare_id       Int
+  location_id       Int            @id @default(autoincrement())
+  locat_timestamp   DateTime       @db.Date
+  locat_latitude    String         @default("0") @db.VarChar(255)
+  locat_longitude   String         @default("0") @db.VarChar(255)
+  locat_status      Int            @default(1)
+  locat_distance    Int            @default(0)
+  locat_battery     Int            @default(0)
+  locat_noti_time   DateTime?
+  locat_noti_status Int?
   takecare_id_ref   takecareperson @relation(fields: [takecare_id], references: [takecare_id])
-  takecare_id       Int // ไอดีผู้สูงอายุ
-  location_id       Int            @id @default(autoincrement()) // ไอดีตำแหน่ง
-  locat_timestamp   DateTime       @db.Date // เวลาที่บันทึก
-  locat_latitude    String         @default("0") @db.VarChar(255) // ละติจูด
-  locat_longitude   String         @default("0") @db.VarChar(255) // ลองติจูด
-  locat_status      Int            @default(1) // สถานะการใช้งาน 0 = ปกติ, 1 = ออกนอกเขต1, 2 = ออกนอกเขต2
-  locat_distance    Int            @default(0) // ระยะห่าง
-  locat_battery     Int            @default(0) // แบตเตอรี่
-  locat_noti_time   DateTime?      // เวลาที่แจ้งเตือน
-  locat_noti_status Int?           // สถานะการแจ้งเตือน 1 = เขต1, 2 = เขต1 80%, 3 = เขต2
+  users_id_ref      users          @relation(fields: [users_id], references: [users_id])
 }
 
 model dlocation {
-  dlocation_id    Int      @id @default(autoincrement()) // ไอดีตำแหน่ง
+  dlocation_id    Int      @id @default(autoincrement())
   users_id        Int
   locat_battery   Int
   locat_distance  Int
@@ -130,61 +126,60 @@ model dlocation {
 }
 
 model extendedhelp {
-  exten_id               Int     @id @default(autoincrement())  // ไอดีการขยายความช่วยเหลือ
-  exten_date             DateTime @db.Date                      // วันที่
-  user_id                Int?                                    // ไอดีผู้ใช้งาน
-  takecare_id            Int?                                    // ไอดีผู้สูงอายุ
-  exten_latitude         String?  @db.VarChar(255)               // ละติจูด
-  exten_longitude        String?  @db.VarChar(255)               // ลองติจูด
-  exten_received_date    DateTime?                               // วันที่รับเรื่อง
-  exten_received_user_id Int?                                    // ไอดีผู้รับเรื่อง
-  exted_closed_date      DateTime?                               // วันที่ปิดเรื่อง
-  exten_closed_user_id   Int?                                    // ไอดีผู้ปิดเรื่อง
+  exten_id               Int       @id @default(autoincrement())
+  exten_date             DateTime  @db.Date
+  user_id                Int?
+  takecare_id            Int?
+  exten_latitude         String?   @db.VarChar(255)
+  exten_longitude        String?   @db.VarChar(255)
+  exten_received_date    DateTime?
+  exten_received_user_id Int?
+  exted_closed_date      DateTime?
+  exten_closed_user_id   Int?
 }
 
 model groupLine {
-  group_id      Int     @id @default(autoincrement())  // ไอดีกลุ่มไลน์
-  group_name    String?  @db.VarChar(100)              // ชื่อกลุ่ม
-  group_line_id String  @db.VarChar(100)               // ไอดีไลน์
-  group_status  Int     @default(1)                    // สถานะการใช้งาน 0 = ปิด, 1 = เปิด
+  group_id      Int     @id @default(autoincrement())
+  group_name    String? @db.VarChar(100)
+  group_line_id String  @db.VarChar(100)
+  group_status  Int     @default(1)
 }
 
 model borrowequipment {
-  borrow_id               Int     @id @default(autoincrement())  // ไอดีการยืม
-  borrow_date             DateTime @db.Date                      // วันที่ยืม
-  borrow_return           DateTime?                              // วันที่คืน
-  borrow_status           Int     @default(1)                    // สถานะการยืม  1 = ยังไม่คืน, 2 = คืนสำเร็จ, 3 = คืนไม่สำเร็จ
-  borrow_user_id          Int                                    // ไอดีผู้ใช้งาน
-  borrow_address          String  @db.Text                       // ที่อยู่
-  borrow_tel              String  @db.VarChar(12)                // เบอร์โทรศัพท์
-  borrow_objective        String  @db.Text                       // วัตถุประสงค์
-  borrow_name             String  @db.VarChar(255)               // ชื่อผู้ยืม
-  borrow_equipment_status Int @default(1)                        // สถานะ 1 = รอ, 2 = อนุมัติ, 3 = ไม่อนุมัติ
-  borrow_create_date      DateTime @db.Date                      // วันที่สร้าง
-  borrow_update_date      DateTime @db.Date                      // วันที่แก้ไข
-  borrow_update_user_id   Int                                    // ไอดีผู้แก้ไข
-  borrow_delete_date      DateTime?                              // วันที่ลบ
-  status                  Int @default(1)                        // สถานะการยืม
-  borrow_approver         Int?                                   // ผู้อนุมัติ
-  borrow_approver_date    DateTime?                              // วันที่อนุมัติ
-  borrow_return_user_id   Int?                                   // ไอดีผู้คืน
-  borrow_return_date      DateTime?                              // วันที่คืน
-  borrow_send_date        DateTime?                              // วันที่ส่ง
-  borrow_send_return      DateTime?                              // วันที่ส่งคืน
-  borrow_send_status      Int @default(1)                        // สถานะการส่ง 1 = รอ, 2 = ส่งสำเร็จ, 3 = ส่งไม่สำเร็จ
-
-  borrowequipment_list borrowequipment_list[]
-  users_id_ref      users       @relation(fields: [borrow_user_id], references: [users_id])
-  borrow_approver_ref users?      @relation("borrow_approver", fields: [borrow_approver], references: [users_id])
-  borrow_return_user_ref users?   @relation("borrow_return_user_id", fields: [borrow_return_user_id], references: [users_id])
+  borrow_id               Int                    @id @default(autoincrement())
+  borrow_date             DateTime               @db.Date
+  borrow_return           DateTime?
+  borrow_status           Int                    @default(1)
+  borrow_user_id          Int
+  borrow_address          String
+  borrow_tel              String                 @db.VarChar(12)
+  borrow_objective        String
+  borrow_name             String                 @db.VarChar(255)
+  borrow_equipment_status Int                    @default(1)
+  borrow_create_date      DateTime               @db.Date
+  borrow_update_date      DateTime               @db.Date
+  borrow_update_user_id   Int
+  borrow_delete_date      DateTime?
+  status                  Int                    @default(1)
+  borrow_approver         Int?
+  borrow_approver_date    DateTime?
+  borrow_return_user_id   Int?
+  borrow_return_date      DateTime?
+  borrow_send_date        DateTime?
+  borrow_send_return      DateTime?
+  borrow_send_status      Int                    @default(1)
+  borrow_approver_ref     users?                 @relation("borrow_approver", fields: [borrow_approver], references: [users_id])
+  borrow_return_user_ref  users?                 @relation("borrow_return_user_id", fields: [borrow_return_user_id], references: [users_id])
+  users_id_ref            users                  @relation(fields: [borrow_user_id], references: [users_id])
+  borrowequipment_list    borrowequipment_list[]
 }
 
 model borrowequipment_list {
-  borrow_id_ref borrowequipment @relation(fields: [borrow_id], references: [borrow_id])
-  borrow_id               Int                                    // ไอดีการยืม
-  borrow_equipment_id     Int     @id @default(autoincrement())  // ไอดีอุปกรณ์
-  borrow_equipment        String  @db.VarChar(255)               // ชื่ออุปกรณ์
-  borrow_equipment_number String  @db.VarChar(255)               // เลขอุปกรณ์
-  borrow_equipment_status Int @default(1)                        // สถานะ 0 = รอ, 1 = อนุมัติ, 2 = ไม่อนุมัติ
-  borrow_equipment_delete DateTime?                              // วันที่ลบ
+  borrow_id               Int
+  borrow_equipment_id     Int             @id @default(autoincrement())
+  borrow_equipment        String          @db.VarChar(255)
+  borrow_equipment_number String          @db.VarChar(255)
+  borrow_equipment_status Int             @default(1)
+  borrow_equipment_delete DateTime?
+  borrow_id_ref           borrowequipment @relation(fields: [borrow_id], references: [borrow_id])
 }

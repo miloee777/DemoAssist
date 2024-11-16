@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             users_moo, users_road, users_tubon, users_amphur,
             users_province, users_postcode, users_tel1,
             users_alert_battery, users_status_active,
-            users_related_borrow, users_token
+            users_related_borrow, users_token, status_id
         } = req.body;
 
         // ตรวจสอบว่าข้อมูลครบถ้วน
@@ -30,10 +30,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: {
                     users_user: username,
                     users_passwd: hashedPassword,
-                    status_id: 1, // ตั้งเป็น 1 ถ้าเป็น Admin หรือกำหนดตามค่าในระบบที่แสดงว่าเป็น Admin
-                    users_status_onweb: users_status_onweb || 1, // ค่าเริ่มต้นเป็น 1 หากไม่ได้ระบุ
+                    status_id: status_id || 1, // ใช้ค่า status_id จากคำขอ ถ้าไม่มีให้ใช้ 1 เป็นค่าเริ่มต้น
+                    users_status_onweb: users_status_onweb || 1,
                     users_status_active: users_status_active || 1,
-                    users_line_id: users_line_id || "", // สามารถตั้งเป็น "" หรือ null ถ้าไม่ต้องการระบุ
+                    users_line_id: users_line_id || "",
                     users_fname: fname,
                     users_sname: sname,
                     users_pin: users_pin,
@@ -50,6 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     users_token: users_token || null,
                 }
             });
+            
 
             return res.status(201).json({ message: 'สร้างบัญชีผู้ใช้สำเร็จ', user: newUser });
         } catch (error) {
