@@ -1,14 +1,18 @@
-
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse } from 'next/server'
-import axios from "axios";
 import prisma from '@/lib/prisma'
-import { replyMessage, replyRegistration } from '@/utils/apiLineReply';
-type Data = {
-    message: string;
-    data?: any;
-}
+
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
+    // เพิ่ม header สำหรับ CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // ตรวจสอบและตอบกลับ preflight request
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     if (req.method === 'POST') {
         try {
             if (req.body) {
@@ -33,17 +37,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                         users_tel1         : body.users_tel1,
                     },
                 })
-
             }
             return res.status(200).json({ message: 'success' })
         } catch (error) {
-            console.log("🚀 ~ file: create.ts:31 ~ handle ~ error:", error)
+            console.log("🚀 ~ file: create.ts ~ handle ~ error:", error)
             return res.status(400).json({ message: 'error', data: error })
         }
-
     } else {
         res.setHeader('Allow', ['POST'])
-        res.status(400).json({ message: `วิธี ${req.method} ไม่อนุญาต` })
+        res.status(405).json({ message: `วิธี ${req.method} ไม่อนุญาต` })
     }
-
 }
