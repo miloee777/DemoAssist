@@ -27,7 +27,7 @@ const Registration = () => {
     const [validated, setValidated] = useState(false);
     const [alert, setAlert] = useState({ show: false, message: '' });
     const [isLoading, setLoading] = useState(false);
-    const [displayName, setDisplayName] = useState<string>("");
+    const [displayName, setDisplayName] = useState<string>("ทดสอบ");
     const [dataUser, setDataUser] = useState<UserData>({ isLogin: true, data: null });
 
     useEffect(() => {
