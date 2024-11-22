@@ -2,14 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    // เพิ่ม header สำหรับ CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Origin', '*'); // อนุญาตให้ทุกต้นทางเข้าถึงได้
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // อนุญาตให้ method เหล่านี้
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // อนุญาตให้ header เหล่านี้
 
-    // ตรวจสอบและตอบกลับ preflight request
     if (req.method === 'OPTIONS') {
-        res.status(200).end();
+        res.status(200).end(); // ตอบกลับ preflight request ด้วย 200 OK
         return;
     }
 
