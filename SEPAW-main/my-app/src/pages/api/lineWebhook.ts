@@ -21,7 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json({ status: 'success' });
     } catch (error) {
       console.error('Error handling webhook:', error);
-      res.status(500).json({ status: 'error', message: error.message });
+      if (error instanceof Error) {
+        res.status(500).json({ status: 'error', message: error.message });
+      } else {
+        res.status(500).json({ status: 'error', message: 'Unknown error occurred' });
+      }
     }
   } else {
     res.setHeader('Allow', ['POST']);
