@@ -41,7 +41,7 @@ interface UserTakecareData {
         takecare_drug    ?: string;
         takecare_status  ?: number;
     } | null;
-    users_id: 9;
+    users_id: number | null;
   }
 
 const ElderlyRegistration = () => {
@@ -51,7 +51,7 @@ const ElderlyRegistration = () => {
     const [alert, setAlert] = useState({ show: false, message: '' });
     const [isLoading, setLoading] = useState(false);
     const [displayName, setDisplayName] = useState<string>("");
-    const [dataUser, setDataUser] = useState<UserTakecareData>({ isLogin: true, data: null, users_id: 9 });
+    const [dataUser, setDataUser] = useState<UserTakecareData>({ isLogin: true, data: null, users_id: null });
     const [takecareBirthday, setTakecareBirthday] = useState<Date | null>(new Date());
     const [masterGender, setMasterGender] = useState<[]>([]);
     const [masterMarry, setMasterMarry] = useState<[]>([]);
@@ -111,7 +111,7 @@ const ElderlyRegistration = () => {
             }
         } catch (error) {
             console.log("🚀 ~ file: registration.tsx:66 ~ onGetUserData ~ error:", error)
-            setDataUser({ isLogin: false, data: null, users_id: 9 })
+            setDataUser({ isLogin: false, data: null, users_id: null })
             setAlert({ show: true, message: 'ระบบไม่สามารถดึงข้อมูลของท่านได้ กรุณาลองใหม่อีกครั้ง' })
         }
     }
