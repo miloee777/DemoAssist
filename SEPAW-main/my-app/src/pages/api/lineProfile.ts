@@ -12,14 +12,14 @@ type Data = {
 	message: string;
 	data?: any;
 }
-// const getUser = async (userId: string) => {
-// 	const responseUser = await axios.get(`${process.env.WEB_DOMAIN}/api/user/getUser/${userId}`);
-// 	if(responseUser.data?.data){
-// 		return responseUser.data.data
-// 	}else{
-// 		return null
-// 	}
-// }
+const getUser = async (userId: string) => {
+	const responseUser = await axios.get(`${process.env.WEB_DOMAIN}/api/user/getUser/${userId}`);
+	if(responseUser.data?.data){
+		return responseUser.data.data
+	}else{
+		return null
+	}
+}
 const getGroupLine = async (groupId: string) => {
 	const response = await axios.get(`${process.env.WEB_DOMAIN}/api/master/getGroupLine?group_line_id=${groupId}`);
 	if(response.data?.data){
