@@ -83,3 +83,14 @@ export const updateExtendedHelp = async (data: any) => {
         return error
     }
 }
+	// ทำการexport getlocation
+	export const getLocation = async (takecare_id: number, users_id: number, safezone_id: number) => {
+    const url = urlName(`/api/location/getLocation?takecare_id=${takecare_id}&users_id=${users_id}&safezone_id=${safezone_id}`);
+    const response = await axios.get(url);
+    if (response.data?.data) {
+        return response.data.data;
+    } else {
+        return null;
+    }
+};
+
