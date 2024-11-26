@@ -169,7 +169,7 @@ const ElderlyRegistration = () => {
     return (
         <Container>
             <div className={styles.main}>
-                <Image src={'/images/logo.png'} width={100} height={100} alt="Logo" priority />
+                <Image src={'/images/Logo.png'} width={100} height={100} alt="Logo" priority />
                 <h1 className="py-2">ลงทะเบียนผู้สูงอายุ</h1>
             </div>
             <div className="px-5">
