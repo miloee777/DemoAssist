@@ -18,8 +18,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   }
 
   try {
-    const events = req.body.events?.[0];
+    console.log("Request received:", req.body); // Debugging: ดูข้อมูลที่ได้รับจาก LINE
+
+    const events = req.body?.events?.[0];
     if (!events) {
+      console.error("No events found in the request body");
       return res.status(400).json({ message: "No event found in the request" });
     }
 
@@ -27,14 +30,16 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     const userId = source?.userId;
 
     if (!replyToken || !userId) {
+      console.error("Missing replyToken or userId", { replyToken, userId });
       return res.status(400).json({ message: "Missing replyToken or userId" });
     }
 
     if (type === "message" && message?.type === "text") {
-      const userMessage = message.text;
+      const userMessage = message.text.trim();
 
       switch (userMessage) {
         case "ลงทะเบียน": {
+          console.log("Handling registration request for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
             await replyUserInfo({ replyToken, userData });
@@ -45,6 +50,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         }
 
         case "การยืม การคืนครุภัณฑ์": {
+          console.log("Handling borrow equipment request for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
             await replyMenuBorrowequipment({ replyToken, userData });
@@ -55,13 +61,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         }
 
         case "ดูตำแหน่งปัจจุบัน": {
+          console.log("Handling location request for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
             const encodedUserId = encodeURIComponent(userData.users_id);
             const takecareperson = await safeApiCall(() =>
               getTakecareperson(encodedUserId)
             );
-            if (takecareperson && takecareperson.takecare_id) {
+            if (takecareperson?.takecare_id) {
               const safezone = await safeApiCall(() =>
                 getSafezone(takecareperson.takecare_id, userData.users_id)
               );
@@ -92,13 +99,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         }
 
         case "ตั้งค่าเขตปลอดภัย": {
+          console.log("Handling safe zone setup for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
             const encodedUserId = encodeURIComponent(userData.users_id);
             const takecareperson = await safeApiCall(() =>
               getTakecareperson(encodedUserId)
             );
-            if (takecareperson && takecareperson.takecare_id) {
+            if (takecareperson?.takecare_id) {
               const safezone = await safeApiCall(() =>
                 getSafezone(takecareperson.takecare_id, userData.users_id)
               );
@@ -121,11 +129,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         }
 
         default: {
+          console.warn("Unknown command received:", userMessage);
           await replyMessage({ replyToken, message: "คำสั่งไม่ถูกต้อง" });
           break;
         }
       }
     } else {
+      console.warn("Unsupported message type:", type);
       await replyMessage({
         replyToken,
         message: "ประเภทข้อความนี้ยังไม่รองรับ",
