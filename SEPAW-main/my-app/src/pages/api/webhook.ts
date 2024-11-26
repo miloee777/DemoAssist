@@ -127,7 +127,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           break;
         }
       
-        case "ข้อมูลผู้ใช้งาน": {
+        case "ดูข้อมูลผู้ใช้งาน": {
           console.log("Fetching user info for:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
@@ -141,7 +141,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           break;
         }
       
-        case "การเชื่อมต่ออุปกรณ์": {
+        case "การเชื่อมต่อนาฬิกา": {
           console.log("Handling device connection for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
@@ -155,7 +155,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           break;
         }
       
-        case "การยืม การคืนครุภัณฑ์": {
+        case "การยืม-คืนอุปกรณ์": {
           console.log("Handling borrow equipment request for user:", userId);
           const userData = await safeApiCall(() => getUser(userId));
           if (userData) {
