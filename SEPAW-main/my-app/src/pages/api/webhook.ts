@@ -17,26 +17,32 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
+  console.log("Request body:", JSON.stringify(req.body, null, 2)); // Debugging: ดูข้อมูลทั้งหมดในคำขอ
+
+  const events = req.body?.events;
+
+  // กรณี events ไม่มีข้อมูล (เช่น การ Verify Webhook)
+  if (!events || events.length === 0) {
+    console.warn("No events found in the request body");
+    return res.status(200).json({ message: "No events found" }); // ตอบกลับ 200 OK เสมอ
+  }
+
   try {
-    console.log("Request received:", req.body); // Debugging: ดูข้อมูลที่ได้รับจาก LINE
-
-    const events = req.body?.events?.[0];
-    if (!events) {
-      console.error("No events found in the request body");
-      return res.status(400).json({ message: "No event found in the request" });
-    }
-
-    const { replyToken, source, type, message } = events;
+    const event = events[0];
+    const { replyToken, source, type, message } = event;
     const userId = source?.userId;
 
+    // ตรวจสอบ replyToken และ userId
     if (!replyToken || !userId) {
       console.error("Missing replyToken or userId", { replyToken, userId });
-      return res.status(400).json({ message: "Missing replyToken or userId" });
+      return res.status(200).json({ message: "Missing replyToken or userId" });
     }
 
     if (type === "message" && message?.type === "text") {
       const userMessage = message.text.trim();
+      console.log(`Received message: "${userMessage}" from user: ${userId}`);
 
+      // Handle คำสั่งต่าง ๆ
       switch (userMessage) {
         case "ลงทะเบียน": {
           console.log("Handling registration request for user:", userId);
